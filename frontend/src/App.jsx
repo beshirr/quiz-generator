@@ -1,17 +1,15 @@
 import { useState } from 'react'
 import './App.css'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { Routes, Route } from 'react-router-dom';
+import ClerkProviderRoutes from './auth/ClerkProviderRoutes';
 
 function App() {
   return (
-    <header>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </header>
+    <ClerkProviderRoutes>
+      <Routes>
+        
+      </Routes>
+    </ClerkProviderRoutes>
   );
 }
 
