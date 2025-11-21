@@ -1,5 +1,5 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ClerkProviderRoutes from './auth/ClerkProviderRoutes';
 import { Layout } from './layout/Layout';
 import { AuthenticationPage } from './auth/AuthenticationPage';
@@ -8,16 +8,18 @@ import { HistoryPanel } from './history/HistoryPanel';
 
 function App() {
   return (
-    <ClerkProviderRoutes>
-      <Routes>
-        <Route path='/sign-in/*' element={<AuthenticationPage />} />
-        <Route path='/sign-up' element={<AuthenticationPage />} />
-        <Route element={<Layout />}>
-          <Route path='/' element={<QuizGenerator />} />
-          <Route path='/history' element={<HistoryPanel />} />
-        </Route>
-      </Routes>
-    </ClerkProviderRoutes>
+    <BrowserRouter>
+      <ClerkProviderRoutes>
+        <Routes>
+          <Route path='/sign-in/*' element={<AuthenticationPage />} />
+          <Route path='/sign-up' element={<AuthenticationPage />} />
+          <Route element={<Layout />}>
+            <Route path='/' element={<QuizGenerator />} />
+            <Route path='/history' element={<HistoryPanel />} />
+          </Route>
+        </Routes>
+      </ClerkProviderRoutes>
+    </BrowserRouter>
   );
 }
 
