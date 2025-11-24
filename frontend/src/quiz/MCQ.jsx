@@ -1,4 +1,4 @@
-import "react"
+import { useState } from "react";
 
 export function MCQ({challenge, showExplanation = false}) {
     const [selectedOption, setSelectedOption] = useState(null)
