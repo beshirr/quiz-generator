@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session 
 from datetime import datetime, timedelta
-import models
-
+from . import models
 
 def get_challenge_quota(db: Session, user_id: str):
     return (db.query(models.ChallengeQuota)

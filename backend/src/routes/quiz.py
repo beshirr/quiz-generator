@@ -6,6 +6,7 @@ from ..database.models import Challenge, get_db
 from datetime import datetime
 from ..database.db import *
 from ..utils import *
+from ..ai_generator import generate_challenge_with_ai
 
 
 router = APIRouter()
@@ -31,10 +32,30 @@ async def generate_challenge(request: ChallengeRequest, db: Session=Depends(get_
         if quota.quota_remaining <= 0:
             raise HTTPException(status_code=429, detail="no available quota")
 
-        challenge_details = None
+        challenge_data = generate_challenge_with_ai(request.difficulty)
 
+        new_challenge = create_challenge(
+            db=db,
+            difficulty=request.difficulty,
+            created_by=user_id,
+            title=challenge_data["title"],
+            options=json.dumps(challenge_data["options"]),
+            correct_answer_id=challenge_data["correct_answer_id"],
+            explanation=challenge_data["explanation"]
+        )
+
+        quota.quota_remaining -= 1
         db.commit()
-        return challenge_details
+
+        return {
+            "id": new_challenge.id,
+            "difficulty": request.difficulty,
+            "title": new_challenge.title,
+            "options": json.loads(new_challenge.options),
+            "correct_answer_id": new_challenge.correct_answer_id,
+            "explanation": new_challenge.explanation,
+            "timestamp": new_challenge.date_created.isoformat()
+        }
             
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

@@ -1,5 +1,4 @@
-import stat
-from clerk_backend_api import Clerk
+from clerk_backend_api import AuthenticateRequestOptions, Clerk
 from fastapi import HTTPException
 import os 
 from dotenv import load_dotenv
@@ -12,7 +11,7 @@ def authenticate_and_get_user_details(request):
     try:
         request_state = clerk_sdk.authenticate_request(
             request, 
-            AuthenticationRequestOptions(
+            AuthenticateRequestOptions(
                 authorized_parties=["http://localhost:5173", "http://localhost:5172"],
                 jwt_key=os.getenv("JWT_KEY")
             )
