@@ -1,5 +1,7 @@
 import { useState, useEffect, use } from "react";
 import { MCQ } from "./MCQ.jsx"
+import { useApi } from "../utils/api.js";
+
 
 export function QuizGenerator() {
     const [challenge, setChallenge] = useState(null);
@@ -7,12 +9,45 @@ export function QuizGenerator() {
     const [error, setError] = useState(null);
     const [difficulty, setDifficulty] = useState("easy");
     const [quota, setQuota] = useState(null);
+    const { makeRequest } = useApi();
 
-    const fetchQuota = async () => {}
+    useEffect( () => {
+        fetchQuota();
+    }, [])
 
-    const generateQuiz = async () => {}
+    const fetchQuota = async () => {
+        try {
+            const data = await makeRequest("quota")
+            setQuota(data);
+        } catch(e) {
+            console.log(e);
+        }
+    }
 
-    const getNextResetTime = () => {}
+    const generateQuiz = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const data = await makeRequest("generate", {
+                method: "POST", 
+                body: JSON.stringify({difficulty})
+            })
+            setChallenge(data);
+            fetchQuota();
+        } catch (e) {
+            setError(e.message || "Failed to generate quiz");
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const getNextResetTime = () => {
+        if (!quota?.last_reset_data) return null
+        const resetDate = new Date(quota.last_reset_data)
+        resetDate.setHours(resetDate.getHours() + 24)
+        return resetDate
+    }
 
     return (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>

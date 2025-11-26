@@ -20,9 +20,9 @@ class ChallengeRequest(BaseModel):
 
 
 @router.post("/generate")
-async def generate_challenge(request: ChallengeRequest, db: Session=Depends(get_db)):
+async def generate_challenge(request: ChallengeRequest, request_obj: Request, db: Session=Depends(get_db)):
     try:
-        user_id = authenticate_and_get_user_details(request).get("user_id")
+        user_id = authenticate_and_get_user_details(request_obj).get("user_id")
         quota = get_challenge_quota(db, user_id)
 
         if not quota:
