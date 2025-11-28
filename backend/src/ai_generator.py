@@ -32,7 +32,7 @@ def generate_challenge_with_ai(difficulty: str) -> Dict[str, Any]:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-5-nano",
+            model="gpt-5-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Generate a {difficulty} difficulty coding challenge."}
